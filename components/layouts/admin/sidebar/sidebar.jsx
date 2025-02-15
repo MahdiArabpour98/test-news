@@ -28,11 +28,8 @@ import { navItems as staticNavItems } from "../nav-items";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { useUser } from "@/hooks/use-user";
 
 const SideBar = ({ user }) => {
-  const userHook = useUser();
-
   const pathname = usePathname();
 
   const { open, setOpenMobile, isMobile } = useSidebar();
@@ -54,7 +51,7 @@ const SideBar = ({ user }) => {
     if (isMobile) {
       setOpenMobile(false);
     }
-  }, [isMobile]);
+  }, [pathname, isMobile]);
 
   return (
     <Sidebar side="right" variant="sidebar" collapsible="icon">
