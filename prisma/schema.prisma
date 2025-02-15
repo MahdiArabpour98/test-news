@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id @default(cuid())
+  username     String?    @unique
+  phoneNumber  String     @unique
+  fullName     String
+  nationalCode String?
+  email        String?
+  status       UserStatus @default(ACTIVE)
+  address      String?
+  news         News[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  image       String?  @unique
+  thumbnail   String?  @unique
+  news        News[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model News {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  content     String?
+  view        Int      @default(0)
+  elected     Boolean  @default(false)
+  image       String?  @unique
+  thumbnail   String?  @unique
+  author      User     @relation(fields: [authorId], references: [id], onDelete: NoAction)
+  authorId    String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: NoAction)
+  categoryId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([categoryId])
+}
+
+enum UserStatus {
+  ACTIVE
+  DEACTIVE
+  SUSPENSE
+}
